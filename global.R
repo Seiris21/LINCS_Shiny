@@ -1,0 +1,30 @@
+library(shiny)
+#library(ggplot2)
+#library(miscTools)
+library(data.table)
+library(synapseClient)
+
+synapseLogin()
+
+data_source <- "syn4719745"
+data_source <- synGet(data_source)
+data_source <- data_source@filePath
+
+#data_source<-'data/PC3_SS2_Level1.txt'
+#data_source<-'data/PC3_SS2_Level3.txt'
+#data_source<-'./Annotated Data/PC3_SS2_Level3.txt'
+#data_source<-'./Annotated Data/PC3_SS2_Level4.txt'
+
+LINCSraw<-fread(data_source)
+
+LINCS<- setnames(LINCSraw,colnames(LINCSraw),make.names(colnames(LINCSraw)))
+
+l_barcode<-unique(LINCS$Barcode)
+
+if (length(l_barcode)==0){
+     l_barcode<-c('No Option')
+}
+
+l_ligand<-paste(unique(LINCS$Ligand), collapse=' ')
+
+l_ecmp<-paste(unique(LINCS$ECMp), collapse=' ')
