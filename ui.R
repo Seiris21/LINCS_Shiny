@@ -10,19 +10,19 @@ shinyUI(fluidPage(
                selectInput('x', 
                            'X', 
                            names(LINCS),
-                           selected = "TotalIntensityDAPI"),
+                           selected = "LigandAnnotID"),
                selectInput('y',
                            'Y', 
                            names(LINCS),
-                           selected="MeanIntensityAlexa647"),
+                           selected="EdUPositiveProportion"),
                selectInput('plot_type',
                            label='Plot Type',
                            choices=list('Scatter'='scatter','Boxplot'='boxplot'),
-                           selected='scatter'),
+                           selected='boxplot'),
                selectInput('color',
                            label='Color',
                            choices=c('None', names(LINCS)),
-                           selected='None')
+                           selected='ECMp')
 #               checkboxGroupInput('barcodes',
 #                                  label='Select Barcode',
 #                                  choices=l_barcode,
@@ -72,7 +72,7 @@ shinyUI(fluidPage(
                  selectInput('facet_column',
                              label='Facet Column by:',
                              choices=c('None'='.',names(LINCS)),
-                             selected='Well'
+                             selected='.'
                  )
           ),
           column(3,
@@ -85,11 +85,12 @@ shinyUI(fluidPage(
                                cols=36,
                                readonly='readonly',
                                l_ecmp),
-                 h5('Included ECMp (Space between proteins):'),
+                 h5('Included ECMp:'),
                  tags$textarea(id='ecmp',
                                rows=5,
                                cols=36,
-                               l_ecmp
+                               'Copy desired ECMp from textbox above. Include a space between ECMp'
+                               #l_ecmp
                  ),
                  
                  #helpText('Current available Ligands:'),
@@ -103,16 +104,17 @@ shinyUI(fluidPage(
                                cols=36,
                                readonly='readonly',
                                l_ligand),
-                 h5('Included Ligand (Space between ligands):'),
+                 h5('Included Ligand:'),
                  tags$textarea(id='ligand',
                                rows=5,
                                cols=36,
-                               l_ligand
+                               'Copy desired Ligands from textbox above. Include a space between ligands.'
+                               #l_ligand
                                )
 
                  
           ),
-          column(3,
+          column(2,
 
                  sliderInput('size_spot', 
                              'Scatterplot Spot Size', 

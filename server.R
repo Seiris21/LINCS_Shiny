@@ -9,13 +9,14 @@ shinyServer(function(input, output) {
      #Subset Data by Barcode (Reactive?)
      plateSubset <- reactive({
 #          print(input$barcodes)
-#          if(input$barcodes!='No Option'){
+#          if(length(input$barcodes)!=0){
 #               df_LINCS <- subset(LINCS, Barcode %in% input$barcodes)
 #          }else{
 #               df_LINCS <- LINCS
 #          }
-          df_LINCS <- subset(LINCS,Barcode %in% l_barcode)
-          
+          if(length(input$barcodes)!=0){
+               df_LINCS <- subset(LINCS,Barcode %in% l_barcode)
+          }
           print(input$ligand)
           ligand <- strsplit(input$ligand,' ')[[1]]
           df_LINCS <- subset(df_LINCS, Ligand %in% ligand)
@@ -41,8 +42,16 @@ shinyServer(function(input, output) {
 #                                df_LINCS$Well=="B02"&(6 %in% input$wells)|
 #                                df_LINCS$Well=="B03"&(7 %in% input$wells)|
 #                                df_LINCS$Well=="B04"&(8 %in% input$wells),]
-          p <- ggplot(df_LINCS,aes_string(x=input$x,y=input$y)) +theme(axis.text.x=element_text(angle=90,vjust=.05,size=input$x_txt_size),axis.text.y=element_text(angle=0,vjust=.05,size=input$y_txt_size))
+          p <- ggplot(df_LINCS,aes_string(x=input$x,y=input$y)) + theme(axis.text.x=element_text(angle=90,vjust=.05,size=input$x_txt_size),axis.text.y=element_text(angle=0,vjust=.05,size=input$y_txt_size))
           
+          if (input$plot_type=='scatter'){
+               p <- p + geom_point(size=input$size_spot, alpha=input$density)
+          }
+          if (input$plot_type=='boxplot'){
+               input_x<-as.name(input$x)
+               print(input_x)
+               p <- p + geom_boxplot(factor=x)
+          }
           #facet_wrap(~Well,ncol=4)
           if(input$facet_method==TRUE){
                facet_split<-paste(input$facet_row,'~',input$facet_column)
@@ -53,7 +62,9 @@ shinyServer(function(input, output) {
           if(input$facet_method==FALSE){
                # facet_wrap requires a formula object
                facet_split<-as.formula(paste('~',input$facet_column))
-               p <- p + facet_wrap(facet_split,ncol=4)
+               if(input$facet_column!='.'){
+                    p <- p + facet_wrap(facet_split,ncol=4)
+               }
           }
                
           if(input$line==TRUE){
@@ -65,12 +76,7 @@ shinyServer(function(input, output) {
           if(input$ylog==TRUE){
                p <- p + scale_y_log10()    
           }
-          if (input$plot_type=='scatter'){
-               p <- p + geom_point(size=input$size_spot, alpha=input$density)
-          }
-          if (input$plot_type=='boxplot'){
-               p <- p + geom_boxplot(aes(factor=Well))
-          }
+          
           if (input$color!='None'){
                p <- p + aes_string(color=input$color)
           }
