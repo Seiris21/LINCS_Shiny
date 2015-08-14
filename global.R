@@ -2,7 +2,11 @@ library(shiny)
 #library(ggplot2)
 #library(miscTools)
 library(data.table)
+<<<<<<< HEAD
+#library(synapseClient)
+=======
 library(synapseClient)
+>>>>>>> 9278b97d239faa0a1e6e002c7ec49ca7ba17633e
 
 #synapseLogin()
 

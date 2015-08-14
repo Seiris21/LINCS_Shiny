@@ -2,6 +2,10 @@ library(shiny)
 library(ggplot2)
 #library(miscTools)
 library(data.table)
+<<<<<<< HEAD
+library(scales)
+=======
+>>>>>>> 9278b97d239faa0a1e6e002c7ec49ca7ba17633e
 
 shinyServer(function(input, output) {
      #observeEvent(input$reset,{updateTextInput(session,ligand,value=l_ligand)})
@@ -14,6 +18,18 @@ shinyServer(function(input, output) {
 #          }else{
 #               df_LINCS <- LINCS
 #          }
+<<<<<<< HEAD
+          
+          print(input$ligand)
+          ligand <- strsplit(input$ligand,' ')[[1]]
+          df_LINCS <- subset(LINCS, Ligand %in% ligand)
+          print(input$ecmp)
+          ecmp <- strsplit(input$ecmp, ' ')[[1]]
+          df_LINCS <- subset(df_LINCS, ECMp %in% ecmp)
+          if(length(input$barcodes)!=0){
+               df_LINCS <- subset(LINCS,Barcode %in% l_barcode)
+          }
+=======
           if(length(input$barcodes)!=0){
                df_LINCS <- subset(LINCS,Barcode %in% l_barcode)
           }
@@ -23,6 +39,7 @@ shinyServer(function(input, output) {
           print(input$ecmp)
           ecmp <- strsplit(input$ecmp, ' ')[[1]]
           df_LINCS <- subset(df_LINCS, ECMp %in% ecmp)
+>>>>>>> 9278b97d239faa0a1e6e002c7ec49ca7ba17633e
           
           
           #df_LINCS<-subset(df_LINCS, Ligand %in% )
@@ -44,13 +61,63 @@ shinyServer(function(input, output) {
 #                                df_LINCS$Well=="B04"&(8 %in% input$wells),]
           p <- ggplot(df_LINCS,aes_string(x=input$x,y=input$y)) + theme(axis.text.x=element_text(angle=90,vjust=.05,size=input$x_txt_size),axis.text.y=element_text(angle=0,vjust=.05,size=input$y_txt_size))
           
+<<<<<<< HEAD
+          x_val<-df_LINCS[,get(input$x)][1]
+          print(x_val)
+          if(is.numeric(x_val)==TRUE){
+               print('x numeric')
+               if(input$xlim_min!=-1){
+                    if(input$xlim_max!=-1){
+                         p <- p + xlim(input$xlim_min,input$xlim_max)
+                    }else{
+                         p <- p + xlim(input$xlim_min,NA)
+                    }
+               }else{
+                    if(input$xlim_max!=-1){
+                         p <- p + xlim(NA, input$xlim_max)
+                    }else{
+                         p <- p
+                    }
+               }
+               
+          }
+          
+          y_val<-df_LINCS[,get(input$y)][1]
+          if(is.numeric(y_val)==TRUE){
+               print('y numeric')
+               if(input$ylim_min!=-1){
+                    if(input$ylim_max!=-1){
+                         p <- p + ylim(input$ylim_min,input$ylim_max)
+                    }else{
+                         p <- p + ylim(input$ylim_min,NA)
+                    }
+               }else{
+                    if(input$ylim_max!=-1){
+                         p <- p + ylim(NA, input$ylim_max)
+                    }else{
+                         p <- p
+                    }
+               }
+               
+          }
+
+               
+          
+=======
+>>>>>>> 9278b97d239faa0a1e6e002c7ec49ca7ba17633e
           if (input$plot_type=='scatter'){
                p <- p + geom_point(size=input$size_spot, alpha=input$density)
           }
           if (input$plot_type=='boxplot'){
+<<<<<<< HEAD
+               #input_x<-as.name(input$x)
+               #print(input_x)
+               p <- p + geom_boxplot()
+=======
                input_x<-as.name(input$x)
                print(input_x)
                p <- p + geom_boxplot(factor=x)
+>>>>>>> 9278b97d239faa0a1e6e002c7ec49ca7ba17633e
           }
           #facet_wrap(~Well,ncol=4)
           if(input$facet_method==TRUE){
@@ -71,10 +138,21 @@ shinyServer(function(input, output) {
                p <- p + geom_smooth(method='loess',span=input$span)
           }
           if(input$xlog==TRUE){
+<<<<<<< HEAD
+               p <- p + scale_x_continuous(trans=log2_trans(),
+                                           breaks=trans_breaks('log2',function(x) 2^x),
+                                           labels=trans_format('log2',math_format(2^.x)))
+          }
+          if(input$ylog==TRUE){
+               p <- p + scale_y_continuous(trans=log2_trans(),
+                                           breaks=trans_breaks('log2',function(x) 2^x),
+                                           labels=trans_format('log2',math_format(2^.x)))    
+=======
                p <- p + scale_x_log10()
           }
           if(input$ylog==TRUE){
                p <- p + scale_y_log10()    
+>>>>>>> 9278b97d239faa0a1e6e002c7ec49ca7ba17633e
           }
           
           if (input$color!='None'){
@@ -85,6 +163,10 @@ shinyServer(function(input, output) {
           #scale_colour_brewer(palette="Set1")
           print(p)
           
+<<<<<<< HEAD
+     }, width=1150,height=725)
+=======
      }, width=1200,height=725)
+>>>>>>> 9278b97d239faa0a1e6e002c7ec49ca7ba17633e
 })
 
